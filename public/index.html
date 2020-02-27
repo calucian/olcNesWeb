@@ -1,0 +1,85 @@
+<html>
+<head>
+    <title>olcNesWeb - Nes javascript emulator</title>
+    <meta name="description" content="NES Emulator written in ES6 and based on the olc Tutorial Videos" />
+    <link rel="stylesheet" href="./css/main.css" />
+</head>
+<body>
+<div id="body">
+    <h2 class="text-center p-5 placeholder border">To begin drag a file here</h2>
+
+    <div class="row justify-content-center" style="display: none">
+        <div class="col-6">
+            <canvas id="canvas" height="256" width="256" class="w-100"></canvas>
+        </div>
+        <div class="col d-none">
+            <canvas id="canvas2" width="256" height="240"></canvas>
+        </div>
+    </div>
+    <div>
+        <input type="file" id="file" class="form-control-file" />
+        <button id="start" class="btn btn-primary">Start/stop</button>
+        <button id="reset" class="btn btn-secondary">Reset</button>
+        <button id="step">Step</button>
+        <button id="frame">Step Frame</button>
+
+    </div>
+
+</div>
+
+<script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+<script src="https://bundle.run/buffer@5.4.3" type="text/javascript"></script>
+<script src="./bundle.js"></script>
+
+<script>
+    $(() => {
+        let displayCanvas = document.getElementById('canvas').getContext('2d');
+        let debugCanvas = document.getElementById('canvas2').getContext('2d');
+
+        let main = new App(displayCanvas, debugCanvas);
+
+        let start = 0;
+        let fpsInterval = 1000 / 60;
+        step = (timestamp) => {
+            if (timestamp - start > fpsInterval) {
+                start = timestamp;
+                main.step();
+            }
+
+            window.requestAnimationFrame(step);
+        };
+
+        $('#file').change((event) => {
+            var input = event.target;
+
+            main.handleFile(input.files[0]);
+        });
+
+        $('#start').click((event) => {
+            main.start();
+        });
+
+        $('#body')
+        .on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        })
+        .on('dragover dragenter', function() {
+            $(this).addClass('is-dragover');
+        })
+        .on('dragleave dragend drop', function() {
+            $(this).removeClass('is-dragover');
+        })
+        .on('drop', function(e) {
+            main.handleFile(e.originalEvent.dataTransfer.files[0]);
+
+            $('.placeholder').hide();
+            $('.row').show();
+            window.requestAnimationFrame(step);
+        });
+
+    })
+</script>

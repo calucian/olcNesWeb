@@ -1,0 +1,37 @@
+{
+  "name": "olcnesweb",
+  "version": "1.0.0",
+  "description": "NES Emulator written in ES6 and based on the olc Tutorial Videos",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production",
+    "watch": "webpack --config webpack.config.js --mode=development --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/calucian/olcNesWeb.git"
+  },
+  "keywords": [
+    "OLC",
+    "NES",
+    "JavaScript"
+  ],
+  "author": "Lucian Campan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/calucian/olcNesWeb/issues"
+  },
+  "homepage": "https://github.com/calucian/olcNesWeb#readme",
+  "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/preset-env": "^7.8.6",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "bootstrap": "^4.4.1"
+  }
+}

@@ -1,0 +1,11 @@
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+#body {
+  margin: 2em;
+  padding: 2em;
+
+  &.is-dragover {
+    border: 5px dashed #ccc;
+    background-color: grey;
+  }
+}
