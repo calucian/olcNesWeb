@@ -12,17 +12,39 @@
         <div class="col-6">
             <canvas id="canvas" height="256" width="256" class="w-100"></canvas>
         </div>
-        <div class="col d-none">
+        <div class="col" style="display: none">
             <canvas id="canvas2" width="256" height="240"></canvas>
         </div>
     </div>
     <div>
-        <input type="file" id="file" class="form-control-file" />
-        <button id="start" class="btn btn-primary">Start/stop</button>
-        <button id="reset" class="btn btn-secondary">Reset</button>
-        <button id="step">Step</button>
-        <button id="frame">Step Frame</button>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                <label for="file">Or select a file</label>
+                <input type="file" id="file" class="form-control-file" />
+                </div>
 
+                <button id="start" class="btn btn-primary">Start/stop</button>
+                <button id="reset" class="btn btn-secondary">Reset</button>
+            </div>
+            <div class="col-6">
+                <h5>Key mappings</h5>
+                <div class="row">
+                    <div class="col-6">
+                        <code class="badge badge-light">Up</code> - <code>Up arrow</code><br/>
+                        <code class="badge badge-light">Down</code> - <code>Down arrow</code><br/>
+                        <code class="badge badge-light">Left</code> - <code>Left arrow</code><br/>
+                        <code class="badge badge-light">Right</code> - <code>Right arrow</code>
+                    </div>
+                    <div class="col-6">
+                        <code class="badge badge-light">Button A</code> - <code>Z</code><br/>
+                        <code class="badge badge-light">Button B</code> - <code>X</code><br/>
+                        <code class="badge badge-light">Select</code> - <code>A</code><br/>
+                        <code class="badge badge-light">Start</code> - <code>S</code>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -35,51 +57,54 @@
 <script src="./bundle.js"></script>
 
 <script>
-    $(() => {
-        let displayCanvas = document.getElementById('canvas').getContext('2d');
-        let debugCanvas = document.getElementById('canvas2').getContext('2d');
-
-        let main = new App(displayCanvas, debugCanvas);
-
-        let start = 0;
-        let fpsInterval = 1000 / 60;
-        step = (timestamp) => {
-            if (timestamp - start > fpsInterval) {
-                start = timestamp;
+    $(function () {
+        function step () {
+            if ((Date.now() - start) > fpsInterval) {
+                start = Date.now();
                 main.step();
             }
 
             window.requestAnimationFrame(step);
-        };
+        }
 
-        $('#file').change((event) => {
-            var input = event.target;
-
-            main.handleFile(input.files[0]);
-        });
-
-        $('#start').click((event) => {
-            main.start();
-        });
-
-        $('#body')
-        .on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        })
-        .on('dragover dragenter', function() {
-            $(this).addClass('is-dragover');
-        })
-        .on('dragleave dragend drop', function() {
-            $(this).removeClass('is-dragover');
-        })
-        .on('drop', function(e) {
-            main.handleFile(e.originalEvent.dataTransfer.files[0]);
+        function selectFile (file) {
+            main.handleFile(file);
 
             $('.placeholder').hide();
             $('.row').show();
             window.requestAnimationFrame(step);
+        }
+
+        var displayCanvas = document.getElementById('canvas').getContext('2d');
+        var debugCanvas = document.getElementById('canvas2').getContext('2d');
+
+        var main = new App(displayCanvas, debugCanvas);
+
+        var start = 0;
+        var fpsInterval = 1000 / 60;
+
+        $('#file').change(function (event) {
+            selectFile(event.target.files[0]);
         });
+
+        $('#start').click(function (event) {
+            main.start();
+        });
+
+        $('#body')
+                .on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                .on('dragover dragenter', function() {
+                    $(this).addClass('is-dragover');
+                })
+                .on('dragleave dragend drop', function() {
+                    $(this).removeClass('is-dragover');
+                })
+                .on('drop', function(e) {
+                    selectFile(e.originalEvent.dataTransfer.files[0]);
+                });
 
     })
 </script>

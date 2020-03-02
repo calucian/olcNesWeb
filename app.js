@@ -2,6 +2,7 @@ import Bus from "./src/Bus";
 import Cartridge from "./src/Cartridge";
 import Cpu6502 from "./src/Cpu6502";
 import olc2C02 from "./src/olc2C02";
+import Pixel from "./src/lib/PIxel";
 
 class App {
     constructor (displayCanvas, debugCanvas) {
@@ -18,8 +19,6 @@ class App {
         this.cartridge = new Cartridge();
 
         this.bEmulationRun = false;
-        this.fElapsedTime = 0;
-        this.fResidualTime = 0;
         this.mapAsm = [];
 
         this.keys = {
@@ -197,14 +196,6 @@ class App {
     }
 
     step () {
-        var n = Date.now();
-
-        if (!this.nes.cart) {
-            setTimeout(this.step, 1000 / 24);
-
-            return;
-        }
-
         // Handle input for controller in port #1
         this.nes.controller[0] = 0x00;
         this.nes.controller[0] |= this.keys.a ? 0x80 : 0x00;     // A Button
@@ -216,25 +207,14 @@ class App {
         this.nes.controller[0] |= this.keys.left ? 0x02 : 0x00;
         this.nes.controller[0] |= this.keys.right ? 0x01 : 0x00;
 
-        this.fElapsedTime++;
         if (this.bEmulationRun)
         {
             do { this.nes.clock(); } while (!this.nes.ppu.frame_complete);
-            //do { nes.clock(); } while (nes.ppu.cycle !== -1);
 
             this.nes.ppu.frame_complete = false;
-
-            if (this.fResidualTime > 0.0)
-                this.fResidualTime -= this.fElapsedTime;
-            else
-            {
-                this.fResidualTime += (1.0 / 60.0) - this.fElapsedTime;
-            }
         }
 
         this.displayCanvas.putImageData(this.nes.ppu.GetScreen().ctx, 0, 0);
-
-        //setTimeout(this.step, (20 - (Date.now() - n)));
 
         return true;
     };

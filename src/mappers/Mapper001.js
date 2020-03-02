@@ -1,4 +1,5 @@
 import Mapper from "./Mapper";
+import Cartridge from "../Cartridge";
 
 class Mapper001 extends  Mapper
 {

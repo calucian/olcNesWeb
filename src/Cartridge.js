@@ -57,6 +57,8 @@
 import Mapper000 from "./mappers/Mapper000";
 import Mapper001 from "./mappers/Mapper001";
 import Mapper002 from "./mappers/Mapper002";
+import Mapper003 from "./mappers/Mapper003";
+import Mapper066 from "./mappers/Mapper066";
 import parseNES from "./lib/parseNes";
 
 class Cartridge
@@ -103,6 +105,8 @@ class Cartridge
 				case   0: this.pMapper = new Mapper000(this.nPRGBanks, this.nCHRBanks); break;
 				case   1: this.pMapper = new Mapper001(this.nPRGBanks, this.nCHRBanks, this.mirror); break;
 				case   2: this.pMapper = new Mapper002(this.nPRGBanks, this.nCHRBanks); break;
+				case   3: this.pMapper = new Mapper003(this.nPRGBanks, this.nCHRBanks); break;
+				case  66: this.pMapper = new Mapper066(this.nPRGBanks, this.nCHRBanks); break;
 			}
 
 			cb();
